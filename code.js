@@ -7,8 +7,6 @@ function normalizeName(name) {
 
 function rgbaString(color, opacity) {
   if (opacity == null) opacity = 1;
-
-  // 透明度を丸める
   opacity = Math.round(opacity * 1000) / 1000;
 
   var r = Math.round(color.r * 255);
@@ -19,7 +17,6 @@ function rgbaString(color, opacity) {
 
 function normalizeLineHeight(value) {
   if (typeof value === "number") {
-    // 120 → 1.2
     return Math.round((value / 100) * 1000) / 1000;
   }
   return value;
@@ -80,7 +77,6 @@ function groupShadowTokens(styles) {
       var spread = effect.spread || 0;
 
       var alpha = effect.color && effect.color.a != null ? effect.color.a : 1;
-
       var color = rgbaString(effect.color, alpha);
 
       layers.push({ x: x, y: y, blur: blur, spread: spread, color: color });
@@ -306,7 +302,6 @@ function loadStyles() {
   for (var k = 0; k < paintStyles.length; k++) {
     var p = paintStyles[k];
     var paintName = normalizeName(p.name);
-
     var paint = p.paints && p.paints.length > 0 ? p.paints[0] : null;
 
     if (paint && paint.type === "SOLID") {
@@ -327,10 +322,99 @@ function loadStyles() {
     }
   }
 
-  // Shadows
   var shadowStyles = figma.getLocalEffectStyles();
-  semantic.shadow = groupShadowTokens(shadowStyles);
-  primitives.shadow = semantic.shadow;
+
+  // primitives に個別 shadow として格納
+  var shadowPrimitiveCounter = { low: 1, high: 1 };
+  primitives.shadow = {};
+  semantic.shadow = { low: [], high: [] };
+
+  for (var i = 0; i < shadowStyles.length; i++) {
+    var s = shadowStyles[i];
+    var name = normalizeName(s.name);
+    var type = name.indexOf("high") !== -1 ? "high" : "low";
+
+    if (!s.effects || s.effects.length === 0) continue;
+
+    var shadowArray = [];
+
+    for (var e = 0; e < s.effects.length; e++) {
+      var effect = s.effects[e];
+
+      if (effect.type !== "DROP_SHADOW" && effect.type !== "INNER_SHADOW")
+        continue;
+
+      var x =
+        effect.offset && typeof effect.offset.x === "number"
+          ? effect.offset.x
+          : 0;
+      var y =
+        effect.offset && typeof effect.offset.y === "number"
+          ? effect.offset.y
+          : 0;
+      var blur = effect.radius || 0;
+      var spread = effect.spread || 0;
+      var alpha = effect.color && effect.color.a != null ? effect.color.a : 1;
+
+      // color の primitives を逆引きして参照に置き換え
+      var closestColorKey = null;
+      var minDiff = Infinity;
+      var r = Math.round(effect.color.r * 255);
+      var g = Math.round(effect.color.g * 255);
+      var b = Math.round(effect.color.b * 255);
+      var colorKeys = Object.keys(primitives.color);
+      for (var k = 0; k < colorKeys.length; k++) {
+        var cKey = colorKeys[k];
+        var cValue = primitives.color[cKey];
+        var m = cValue.match(/rgba\((\d+),(\d+),(\d+),?([0-9\.]+)?\)/);
+        if (m) {
+          var cr = parseInt(m[1]);
+          var cg = parseInt(m[2]);
+          var cb = parseInt(m[3]);
+          var diff = Math.abs(cr - r) + Math.abs(cg - g) + Math.abs(cb - b);
+          if (diff < minDiff) {
+            minDiff = diff;
+            closestColorKey = cKey;
+          }
+        }
+      }
+
+      var tokenName = type + "-" + shadowPrimitiveCounter[type];
+      shadowPrimitiveCounter[type]++;
+
+      // primitives に shadow の最終値
+      primitives.shadow[tokenName] = {
+        x: x,
+        y: y,
+        blur: blur,
+        spread: spread,
+        color: rgbaString(effect.color, alpha),
+      };
+
+      // semantic では primitives.color を参照しつつ alpha を保持
+      var refColor = closestColorKey
+        ? "{color." + closestColorKey + "}"
+        : rgbaString(effect.color, alpha);
+
+      var semanticShadowValue = {
+        x: "{shadow." + tokenName + ".x}",
+        y: "{shadow." + tokenName + ".y}",
+        blur: "{shadow." + tokenName + ".blur}",
+        spread: "{shadow." + tokenName + ".spread}",
+        color: closestColorKey
+          ? "rgba({color." +
+            closestColorKey +
+            "}, " +
+            Math.round(alpha * 1000) / 1000 +
+            ")"
+          : rgbaString(effect.color, Math.round(alpha * 1000) / 1000),
+      };
+
+      shadowArray.push(semanticShadowValue);
+    }
+
+    semantic.shadow[type] = semantic.shadow[type].concat(shadowArray);
+  }
 }
 
 // -------------------------
