@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <body style="font-family: sans-serif; padding: 16px">
+    <h3>Export Tokens</h3>
+    <p>生成された JSON をダウンロードできます。</p>
+
+    <button id="download">JSON ダウンロード</button>
+
+    <script>
+      let jsonText = "";
+
+      onmessage = (event) => {
+        if (event.data.pluginMessage.type === "export-json") {
+          jsonText = event.data.pluginMessage.data;
+        }
+      };
+
+      document.getElementById("download").onclick = function () {
+        const blob = new Blob([jsonText], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "tokens.json";
+        a.click();
+
+        URL.revokeObjectURL(url);
+      };
+    </script>
+  </body>
+</html>
