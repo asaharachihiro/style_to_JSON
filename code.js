@@ -306,16 +306,23 @@ function loadStyles() {
   for (var k = 0; k < paintStyles.length; k++) {
     var p = paintStyles[k];
     var paintName = normalizeName(p.name);
+
     var paint = p.paints && p.paints.length > 0 ? p.paints[0] : null;
+
     if (paint && paint.type === "SOLID") {
       var opacity = paint.opacity != null ? paint.opacity : 1;
       var colorValue = rgbaString(paint.color, opacity);
-      if (primitives.color[paintName] == null)
+
+      // primitives に格納
+      if (primitives.color[paintName] == null) {
         primitives.color[paintName] = colorValue;
+      }
+
+      // semantic では primitives のキー参照
       semantic.color.push({
         name: paintName,
         type: "color",
-        value: primitives.color[paintName],
+        value: "{color." + paintName + "}",
       });
     }
   }
