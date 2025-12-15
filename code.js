@@ -89,6 +89,8 @@ figma.showUI(__html__, { width: 320, height: 200 });
 // -------------------------
 // Output objects
 // -------------------------
+var variableIdToPrimitive = {};
+
 var primitives = {
   fontSize: {},
   fontWeight: {},
@@ -118,6 +120,11 @@ async function loadVariables() {
       var vid = c.variableIds[j];
       var v = figma.variables.getVariableById(vid);
       var name = normalizeName(v.name);
+
+      variableIdToPrimitive[v.id] = {
+        type: v.resolvedType,
+        name: name,
+      };
 
       // defaultModeId が無い場合は valuesByMode の最初のキーを使う
       var modeId =
@@ -169,14 +176,60 @@ function loadStyles() {
     var style = textStyles[i];
     var name = normalizeName(style.name);
 
+    // fontSize
+    var fontSizeValue = null;
+
+    if (
+      style.boundVariables &&
+      style.boundVariables.fontSize &&
+      style.boundVariables.fontSize.id
+    ) {
+      var vid = style.boundVariables.fontSize.id;
+      var ref = variableIdToPrimitive[vid];
+      if (ref) {
+        fontSizeValue = "{fontSize." + ref.name + "}";
+      }
+    } else {
+      fontSizeValue = style.fontSize;
+    }
+
     // lineHeight
     var lineHeightValue = null;
-    if (style.lineHeight && typeof style.lineHeight.value === "number") {
-      lineHeightValue = style.lineHeight.value;
+
+    if (
+      style.boundVariables &&
+      style.boundVariables.lineHeight &&
+      style.boundVariables.lineHeight.id
+    ) {
+      var lhVid = style.boundVariables.lineHeight.id;
+      var lhRef = variableIdToPrimitive[lhVid];
+      if (lhRef) {
+        lineHeightValue = "{lineHeight." + lhRef.name + "}";
+      }
+    } else if (style.lineHeight && typeof style.lineHeight.value === "number") {
+      lineHeightValue = Math.round(style.lineHeight.value);
+    }
+
+    // letterSpacing
+    var letterSpacingValue = null;
+
+    if (
+      style.boundVariables &&
+      style.boundVariables.letterSpacing &&
+      style.boundVariables.letterSpacing.id
+    ) {
+      var lsVid = style.boundVariables.letterSpacing.id;
+      var lsRef = variableIdToPrimitive[lsVid];
+      if (lsRef) {
+        letterSpacingValue = "{letterSpacing." + lsRef.name + "}";
+      }
+    } else {
+      letterSpacingValue = style.letterSpacing;
     }
 
     // fontFamily（mixed 対策）
     var fontFamilyValue = "";
+
     if (
       style.fontName !== figma.mixed &&
       style.fontName &&
@@ -193,65 +246,42 @@ function loadStyles() {
       style.fontName &&
       style.fontName.variableId
     ) {
-      var varId = style.fontName.variableId;
-      var variable = figma.variables.getVariableById(varId);
+      var fwVid = style.fontName.variableId;
+      var fwRef = variableIdToPrimitive[fwVid];
+      if (fwRef) {
+        fontWeightValue = "{fontWeight." + fwRef.name + "}";
+      }
+    }
 
-      var modeId =
-        variable.defaultModeId != null
-          ? variable.defaultModeId
-          : Object.keys(variable.valuesByMode)[0];
-
-      fontWeightValue = variable.valuesByMode[modeId];
-    } else if (primitives.fontWeight[name] != null) {
-      fontWeightValue = primitives.fontWeight[name];
-    } else if (
+    if (
+      fontWeightValue == null &&
       style.fontName !== figma.mixed &&
       style.fontName &&
       style.fontName.weight
     ) {
-      fontWeightValue = fontWeightNameToNumber(style.fontName.weight);
-    } else {
-      fontWeightValue = 400;
+      var fwNum = fontWeightNameToNumber(style.fontName.weight);
+      var fwKey = fontWeightValueToKey[fwNum];
+
+      if (fwKey) {
+        fontWeightValue = "{fontWeight." + fwKey + "}";
+      } else {
+        fontWeightValue = fwNum; // 万一 primitives に無い場合
+      }
     }
 
-    function fontWeightNameToNumber(name) {
-      var map = {
-        Thin: 100,
-        ExtraLight: 200,
-        Light: 300,
-        Regular: 400,
-        Medium: 500,
-        SemiBold: 600,
-        Bold: 700,
-        ExtraBold: 800,
-        Black: 900,
-      };
-      return map[name] ? map[name] : 400;
+    if (fontWeightValue == null) {
+      fontWeightValue = "{fontWeight.font-weight-regular}";
     }
 
     semantic.typography.push({
       name: name,
       type: "typography",
       value: {
-        fontSize:
-          primitives.fontSize[name] != null
-            ? primitives.fontSize[name]
-            : style.fontSize,
+        fontSize: fontSizeValue,
         fontWeight: fontWeightValue,
-        lineHeight:
-          primitives.lineHeight[name] != null
-            ? Math.round(primitives.lineHeight[name])
-            : lineHeightValue != null
-            ? Math.round(lineHeightValue)
-            : null,
-        letterSpacing:
-          primitives.letterSpacing[name] != null
-            ? primitives.letterSpacing[name]
-            : style.letterSpacing,
-        fontFamily:
-          primitives.fontFamily[name] != null
-            ? primitives.fontFamily[name]
-            : fontFamilyValue,
+        lineHeight: lineHeightValue,
+        letterSpacing: letterSpacingValue,
+        fontFamily: fontFamilyValue,
       },
     });
   }
