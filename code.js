@@ -336,42 +336,41 @@ function loadStyles() {
 
     if (!s.effects || s.effects.length === 0) continue;
 
-    var shadowArray = [];
-
     for (var e = 0; e < s.effects.length; e++) {
       var effect = s.effects[e];
-
       if (effect.type !== "DROP_SHADOW" && effect.type !== "INNER_SHADOW")
         continue;
 
-      var x =
-        effect.offset && typeof effect.offset.x === "number"
-          ? effect.offset.x
-          : 0;
-      var y =
-        effect.offset && typeof effect.offset.y === "number"
-          ? effect.offset.y
-          : 0;
-      var blur = effect.radius || 0;
-      var spread = effect.spread || 0;
-      var alpha = effect.color && effect.color.a != null ? effect.color.a : 1;
+      var x = 0,
+        y = 0,
+        blur = 0,
+        spread = 0,
+        alpha = 1;
+      if (effect.offset && typeof effect.offset.x === "number")
+        x = effect.offset.x;
+      if (effect.offset && typeof effect.offset.y === "number")
+        y = effect.offset.y;
+      if (typeof effect.radius === "number") blur = effect.radius;
+      if (typeof effect.spread === "number") spread = effect.spread;
+      if (effect.color && typeof effect.color.a === "number")
+        alpha = effect.color.a;
 
-      // color の primitives を逆引きして参照に置き換え
+      // closest color search
       var closestColorKey = null;
       var minDiff = Infinity;
       var r = Math.round(effect.color.r * 255);
       var g = Math.round(effect.color.g * 255);
       var b = Math.round(effect.color.b * 255);
+
       var colorKeys = Object.keys(primitives.color);
       for (var k = 0; k < colorKeys.length; k++) {
         var cKey = colorKeys[k];
-        var cValue = primitives.color[cKey];
-        var m = cValue.match(/rgba\((\d+),(\d+),(\d+),?([0-9\.]+)?\)/);
+        var m = primitives.color[cKey].match(/rgba\((\d+),(\d+),(\d+)/);
         if (m) {
-          var cr = parseInt(m[1]);
-          var cg = parseInt(m[2]);
-          var cb = parseInt(m[3]);
-          var diff = Math.abs(cr - r) + Math.abs(cg - g) + Math.abs(cb - b);
+          var diff =
+            Math.abs(parseInt(m[1]) - r) +
+            Math.abs(parseInt(m[2]) - g) +
+            Math.abs(parseInt(m[3]) - b);
           if (diff < minDiff) {
             minDiff = diff;
             closestColorKey = cKey;
@@ -379,41 +378,30 @@ function loadStyles() {
         }
       }
 
-      var tokenName = type + "-" + shadowPrimitiveCounter[type];
-      shadowPrimitiveCounter[type]++;
+      var tokenName = type + "-" + shadowPrimitiveCounter[type]++;
 
-      // primitives に shadow の最終値
+      // primitives に shadow の最終値（alphaを分離）
       primitives.shadow[tokenName] = {
         x: x,
         y: y,
         blur: blur,
         spread: spread,
-        color: rgbaString(effect.color, alpha),
+        color: closestColorKey
+          ? "{color." + closestColorKey + "}"
+          : rgbaString(effect.color, 1),
+        alpha: Math.round(alpha * 1000) / 1000,
       };
 
       // semantic では primitives.color を参照しつつ alpha を保持
-      var refColor = closestColorKey
-        ? "{color." + closestColorKey + "}"
-        : rgbaString(effect.color, alpha);
-
-      var semanticShadowValue = {
+      semantic.shadow[type].push({
         x: "{shadow." + tokenName + ".x}",
         y: "{shadow." + tokenName + ".y}",
         blur: "{shadow." + tokenName + ".blur}",
         spread: "{shadow." + tokenName + ".spread}",
-        color: closestColorKey
-          ? "rgba({color." +
-            closestColorKey +
-            "}, " +
-            Math.round(alpha * 1000) / 1000 +
-            ")"
-          : rgbaString(effect.color, Math.round(alpha * 1000) / 1000),
-      };
-
-      shadowArray.push(semanticShadowValue);
+        color: "{shadow." + tokenName + ".color}",
+        alpha: "{shadow." + tokenName + ".alpha}",
+      });
     }
-
-    semantic.shadow[type] = semantic.shadow[type].concat(shadowArray);
   }
 }
 
