@@ -17,6 +17,14 @@ function rgbaString(color, opacity) {
   return "rgba(" + r + "," + g + "," + b + "," + opacity + ")";
 }
 
+function normalizeLineHeight(value) {
+  if (typeof value === "number") {
+    // 120 → 1.2
+    return Math.round((value / 100) * 1000) / 1000;
+  }
+  return value;
+}
+
 // -------------------------
 // Floating-point rounding
 // -------------------------
@@ -84,6 +92,7 @@ function groupShadowTokens(styles) {
   return result;
 }
 
+// -------------------------
 figma.showUI(__html__, { width: 320, height: 200 });
 
 // -------------------------
@@ -108,6 +117,30 @@ var semantic = {
 };
 
 // -------------------------
+// 逆引きマップ
+// -------------------------
+var fontWeightValueToKey = {};
+var lineHeightValueToKey = {};
+
+// -------------------------
+// fontWeight utility
+// -------------------------
+function fontWeightNameToNumber(name) {
+  var map = {
+    Thin: 100,
+    ExtraLight: 200,
+    Light: 300,
+    Regular: 400,
+    Medium: 500,
+    SemiBold: 600,
+    Bold: 700,
+    ExtraBold: 800,
+    Black: 900,
+  };
+  return map[name] ? map[name] : 400;
+}
+
+// -------------------------
 // Variables Fetch (ASYNC)
 // -------------------------
 async function loadVariables() {
@@ -126,7 +159,6 @@ async function loadVariables() {
         name: name,
       };
 
-      // defaultModeId が無い場合は valuesByMode の最初のキーを使う
       var modeId =
         v.defaultModeId != null
           ? v.defaultModeId
@@ -138,7 +170,6 @@ async function loadVariables() {
         value = v.valuesByMode[modeId];
       }
 
-      // alias resolve
       if (v.resolvedType === "VARIABLE_ALIAS") {
         value = figma.variables.resolveVariable(v);
       }
@@ -164,6 +195,17 @@ async function loadVariables() {
   }
 
   normalizePrimitives(primitives);
+
+  // 逆引きマップ作成
+  var fwKeys = Object.keys(primitives.fontWeight);
+  for (var i = 0; i < fwKeys.length; i++) {
+    fontWeightValueToKey[primitives.fontWeight[fwKeys[i]]] = fwKeys[i];
+  }
+
+  var lhKeys = Object.keys(primitives.lineHeight);
+  for (var i = 0; i < lhKeys.length; i++) {
+    lineHeightValueToKey[primitives.lineHeight[lhKeys[i]]] = lhKeys[i];
+  }
 }
 
 // -------------------------
@@ -178,7 +220,6 @@ function loadStyles() {
 
     // fontSize
     var fontSizeValue = null;
-
     if (
       style.boundVariables &&
       style.boundVariables.fontSize &&
@@ -186,33 +227,21 @@ function loadStyles() {
     ) {
       var vid = style.boundVariables.fontSize.id;
       var ref = variableIdToPrimitive[vid];
-      if (ref) {
-        fontSizeValue = "{fontSize." + ref.name + "}";
-      }
+      if (ref) fontSizeValue = "{fontSize." + ref.name + "}";
     } else {
       fontSizeValue = style.fontSize;
     }
 
     // lineHeight
-    var lineHeightValue = null;
-
-    if (
-      style.boundVariables &&
-      style.boundVariables.lineHeight &&
-      style.boundVariables.lineHeight.id
-    ) {
-      var lhVid = style.boundVariables.lineHeight.id;
-      var lhRef = variableIdToPrimitive[lhVid];
-      if (lhRef) {
-        lineHeightValue = "{lineHeight." + lhRef.name + "}";
-      }
-    } else if (style.lineHeight && typeof style.lineHeight.value === "number") {
-      lineHeightValue = Math.round(style.lineHeight.value);
+    var lhValue = null;
+    if (style.lineHeight && typeof style.lineHeight.value === "number") {
+      var ratio = normalizeLineHeight(style.lineHeight.value);
+      var lhKey = lineHeightValueToKey[ratio];
+      lhValue = lhKey ? "{lineHeight." + lhKey + "}" : ratio;
     }
 
     // letterSpacing
     var letterSpacingValue = null;
-
     if (
       style.boundVariables &&
       style.boundVariables.letterSpacing &&
@@ -220,16 +249,13 @@ function loadStyles() {
     ) {
       var lsVid = style.boundVariables.letterSpacing.id;
       var lsRef = variableIdToPrimitive[lsVid];
-      if (lsRef) {
-        letterSpacingValue = "{letterSpacing." + lsRef.name + "}";
-      }
+      if (lsRef) letterSpacingValue = "{letterSpacing." + lsRef.name + "}";
     } else {
       letterSpacingValue = style.letterSpacing;
     }
 
-    // fontFamily（mixed 対策）
+    // fontFamily
     var fontFamilyValue = "";
-
     if (
       style.fontName !== figma.mixed &&
       style.fontName &&
@@ -240,7 +266,6 @@ function loadStyles() {
 
     // fontWeight
     var fontWeightValue = null;
-
     if (
       style.fontName !== figma.mixed &&
       style.fontName &&
@@ -248,11 +273,8 @@ function loadStyles() {
     ) {
       var fwVid = style.fontName.variableId;
       var fwRef = variableIdToPrimitive[fwVid];
-      if (fwRef) {
-        fontWeightValue = "{fontWeight." + fwRef.name + "}";
-      }
+      if (fwRef) fontWeightValue = "{fontWeight." + fwRef.name + "}";
     }
-
     if (
       fontWeightValue == null &&
       style.fontName !== figma.mixed &&
@@ -261,17 +283,10 @@ function loadStyles() {
     ) {
       var fwNum = fontWeightNameToNumber(style.fontName.weight);
       var fwKey = fontWeightValueToKey[fwNum];
-
-      if (fwKey) {
-        fontWeightValue = "{fontWeight." + fwKey + "}";
-      } else {
-        fontWeightValue = fwNum; // 万一 primitives に無い場合
-      }
+      fontWeightValue = fwKey ? "{fontWeight." + fwKey + "}" : fwNum;
     }
-
-    if (fontWeightValue == null) {
+    if (fontWeightValue == null)
       fontWeightValue = "{fontWeight.font-weight-regular}";
-    }
 
     semantic.typography.push({
       name: name,
@@ -279,7 +294,7 @@ function loadStyles() {
       value: {
         fontSize: fontSizeValue,
         fontWeight: fontWeightValue,
-        lineHeight: lineHeightValue,
+        lineHeight: lhValue,
         letterSpacing: letterSpacingValue,
         fontFamily: fontFamilyValue,
       },
@@ -291,17 +306,12 @@ function loadStyles() {
   for (var k = 0; k < paintStyles.length; k++) {
     var p = paintStyles[k];
     var paintName = normalizeName(p.name);
-
     var paint = p.paints && p.paints.length > 0 ? p.paints[0] : null;
-
     if (paint && paint.type === "SOLID") {
       var opacity = paint.opacity != null ? paint.opacity : 1;
       var colorValue = rgbaString(paint.color, opacity);
-
-      if (primitives.color[paintName] == null) {
+      if (primitives.color[paintName] == null)
         primitives.color[paintName] = colorValue;
-      }
-
       semantic.color.push({
         name: paintName,
         type: "color",
