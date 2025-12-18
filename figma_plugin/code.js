@@ -171,21 +171,24 @@ async function loadVariables() {
       }
 
       if (v.resolvedType === "FLOAT") {
-        if (name.indexOf("size") !== -1) primitives.fontSize[name] = value;
+        if (name.indexOf("size") !== -1)
+          primitives.fontSize[name] = { value: value };
         else if (name.indexOf("weight") !== -1)
-          primitives.fontWeight[name] = value;
+          primitives.fontWeight[name] = { value: value };
         else if (name.indexOf("height") !== -1)
-          primitives.lineHeight[name] = value;
+          primitives.lineHeight[name] = { value: value };
         else if (
           name.indexOf("letter") !== -1 ||
           name.indexOf("spacing") !== -1
         )
-          primitives.letterSpacing[name] = value;
+          primitives.letterSpacing[name] = { value: value };
       } else if (v.resolvedType === "STRING") {
-        primitives.fontFamily[name] = value;
+        primitives.fontFamily[name] = { value: value };
       } else if (v.resolvedType === "COLOR") {
         var alpha = value && value.a != null ? value.a : 1;
-        primitives.color[name] = rgbaString(value, alpha);
+        primitives.color[name] = {
+          value: rgbaString(value, alpha),
+        };
       }
     }
   }
@@ -310,7 +313,9 @@ function loadStyles() {
 
       // primitives に格納
       if (primitives.color[paintName] == null) {
-        primitives.color[paintName] = colorValue;
+        primitives.color[paintName] = {
+          value: colorValue,
+        };
       }
 
       // semantic では primitives のキー参照
@@ -358,6 +363,7 @@ function loadStyles() {
       // closest color search
       var closestColorKey = null;
       var minDiff = Infinity;
+
       var r = Math.round(effect.color.r * 255);
       var g = Math.round(effect.color.g * 255);
       var b = Math.round(effect.color.b * 255);
@@ -365,16 +371,25 @@ function loadStyles() {
       var colorKeys = Object.keys(primitives.color);
       for (var k = 0; k < colorKeys.length; k++) {
         var cKey = colorKeys[k];
-        var m = primitives.color[cKey].match(/rgba\((\d+),(\d+),(\d+)/);
-        if (m) {
-          var diff =
-            Math.abs(parseInt(m[1]) - r) +
-            Math.abs(parseInt(m[2]) - g) +
-            Math.abs(parseInt(m[3]) - b);
-          if (diff < minDiff) {
-            minDiff = diff;
-            closestColorKey = cKey;
-          }
+        var colorToken = primitives.color[cKey];
+
+        // ★ value 形式に対応
+        var colorValue =
+          colorToken && colorToken.value ? colorToken.value : null;
+
+        if (!colorValue) continue;
+
+        var m = colorValue.match(/rgba\((\d+),(\d+),(\d+)/);
+        if (!m) continue;
+
+        var diff =
+          Math.abs(parseInt(m[1], 10) - r) +
+          Math.abs(parseInt(m[2], 10) - g) +
+          Math.abs(parseInt(m[3], 10) - b);
+
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestColorKey = cKey;
         }
       }
 
@@ -382,14 +397,14 @@ function loadStyles() {
 
       // primitives に shadow の最終値（alphaを分離）
       primitives.shadow[tokenName] = {
-        x: x,
-        y: y,
-        blur: blur,
-        spread: spread,
+        x: { value: x },
+        y: { value: y },
+        blur: { value: blur },
+        spread: { value: spread },
         color: closestColorKey
-          ? "{color." + closestColorKey + "}"
-          : rgbaString(effect.color, 1),
-        alpha: Math.round(alpha * 1000) / 1000,
+          ? { value: "{color." + closestColorKey + "}" }
+          : { value: rgbaString(effect.color, 1) },
+        alpha: { value: Math.round(alpha * 1000) / 1000 },
       };
 
       // semantic では primitives.color を参照しつつ alpha を保持
