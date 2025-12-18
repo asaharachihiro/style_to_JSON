@@ -107,8 +107,8 @@ var primitives = {
 };
 
 var semantic = {
-  typography: [],
-  color: [],
+  typography: {},
+  color: {},
   shadow: {},
 };
 
@@ -203,7 +203,12 @@ async function loadVariables() {
 
   var lhKeys = Object.keys(primitives.lineHeight);
   for (var i = 0; i < lhKeys.length; i++) {
-    lineHeightValueToKey[primitives.lineHeight[lhKeys[i]]] = lhKeys[i];
+    var key = lhKeys[i];
+    var valObj = primitives.lineHeight[key];
+
+    if (valObj && typeof valObj.value === "number") {
+      lineHeightValueToKey[valObj.value] = key;
+    }
   }
 }
 
@@ -287,8 +292,7 @@ function loadStyles() {
     if (fontWeightValue == null)
       fontWeightValue = "{fontWeight.font-weight-regular}";
 
-    semantic.typography.push({
-      name: name,
+    semantic.typography[name] = {
       type: "typography",
       value: {
         fontSize: fontSizeValue,
@@ -297,7 +301,7 @@ function loadStyles() {
         letterSpacing: letterSpacingValue,
         fontFamily: fontFamilyValue,
       },
-    });
+    };
   }
 
   // Colors
@@ -319,11 +323,10 @@ function loadStyles() {
       }
 
       // semantic では primitives のキー参照
-      semantic.color.push({
-        name: paintName,
+      semantic.color[paintName] = {
         type: "color",
         value: "{color." + paintName + "}",
-      });
+      };
     }
   }
 
