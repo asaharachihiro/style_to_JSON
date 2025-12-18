@@ -231,7 +231,7 @@ function loadStyles() {
     ) {
       var vid = style.boundVariables.fontSize.id;
       var ref = variableIdToPrimitive[vid];
-      if (ref) fontSizeValue = "{fontSize." + ref.name + "}";
+      if (ref) fontSizeValue = "{primitives.fontSize." + ref.name + "}";
     } else {
       fontSizeValue = style.fontSize;
     }
@@ -241,7 +241,7 @@ function loadStyles() {
     if (style.lineHeight && typeof style.lineHeight.value === "number") {
       var ratio = normalizeLineHeight(style.lineHeight.value);
       var lhKey = lineHeightValueToKey[ratio];
-      lhValue = lhKey ? "{lineHeight." + lhKey + "}" : ratio;
+      lhValue = lhKey ? "{primitives.lineHeight." + lhKey + "}" : ratio;
     }
 
     // letterSpacing
@@ -253,7 +253,8 @@ function loadStyles() {
     ) {
       var lsVid = style.boundVariables.letterSpacing.id;
       var lsRef = variableIdToPrimitive[lsVid];
-      if (lsRef) letterSpacingValue = "{letterSpacing." + lsRef.name + "}";
+      if (lsRef)
+        letterSpacingValue = "{primitives.letterSpacing." + lsRef.name + "}";
     } else {
       letterSpacingValue = style.letterSpacing;
     }
@@ -277,7 +278,7 @@ function loadStyles() {
     ) {
       var fwVid = style.fontName.variableId;
       var fwRef = variableIdToPrimitive[fwVid];
-      if (fwRef) fontWeightValue = "{fontWeight." + fwRef.name + "}";
+      if (fwRef) fontWeightValue = "{primitives.fontWeight." + fwRef.name + "}";
     }
     if (
       fontWeightValue == null &&
@@ -287,10 +288,10 @@ function loadStyles() {
     ) {
       var fwNum = fontWeightNameToNumber(style.fontName.weight);
       var fwKey = fontWeightValueToKey[fwNum];
-      fontWeightValue = fwKey ? "{fontWeight." + fwKey + "}" : fwNum;
+      fontWeightValue = fwKey ? "{primitives.fontWeight." + fwKey + "}" : fwNum;
     }
     if (fontWeightValue == null)
-      fontWeightValue = "{fontWeight.font-weight-regular}";
+      fontWeightValue = "{primitives.fontWeight.font-weight-regular}";
 
     semantic.typography[name] = {
       type: "typography",
@@ -325,7 +326,7 @@ function loadStyles() {
       // semantic では primitives のキー参照
       semantic.color[paintName] = {
         type: "color",
-        value: "{color." + paintName + "}",
+        value: "{primitives.color." + paintName + "}",
       };
     }
   }
@@ -335,7 +336,7 @@ function loadStyles() {
   // primitives に個別 shadow として格納
   var shadowPrimitiveCounter = { low: 1, high: 1 };
   primitives.shadow = {};
-  semantic.shadow = { low: [], high: [] };
+  semantic.shadow = { low: {}, high: {} };
 
   for (var i = 0; i < shadowStyles.length; i++) {
     var s = shadowStyles[i];
@@ -405,20 +406,20 @@ function loadStyles() {
         blur: { value: blur },
         spread: { value: spread },
         color: closestColorKey
-          ? { value: "{color." + closestColorKey + "}" }
+          ? { value: "{primitives.color." + closestColorKey + "}" }
           : { value: rgbaString(effect.color, 1) },
         alpha: { value: Math.round(alpha * 1000) / 1000 },
       };
 
       // semantic では primitives.color を参照しつつ alpha を保持
-      semantic.shadow[type].push({
-        x: "{shadow." + tokenName + ".x}",
-        y: "{shadow." + tokenName + ".y}",
-        blur: "{shadow." + tokenName + ".blur}",
-        spread: "{shadow." + tokenName + ".spread}",
-        color: "{shadow." + tokenName + ".color}",
-        alpha: "{shadow." + tokenName + ".alpha}",
-      });
+      semantic.shadow[type][tokenName] = {
+        x: "{primitives.shadow." + tokenName + ".x}",
+        y: "{primitives.shadow." + tokenName + ".y}",
+        blur: "{primitives.shadow." + tokenName + ".blur}",
+        spread: "{primitives.shadow." + tokenName + ".spread}",
+        color: "{primitives.shadow." + tokenName + ".color}",
+        alpha: "{primitives.shadow." + tokenName + ".alpha}",
+      };
     }
   }
 }
