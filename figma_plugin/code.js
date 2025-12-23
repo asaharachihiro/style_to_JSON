@@ -44,51 +44,6 @@ function normalizePrimitives(obj) {
 }
 
 // -------------------------
-// Shadow grouping
-// -------------------------
-function groupShadowTokens(styles) {
-  var result = { low: [], high: [] };
-
-  for (var i = 0; i < styles.length; i++) {
-    var s = styles[i];
-    var name = normalizeName(s.name);
-    var type = name.indexOf("high") !== -1 ? "high" : "low";
-
-    if (!s.effects || s.effects.length === 0) continue;
-
-    var layers = [];
-
-    for (var e = 0; e < s.effects.length; e++) {
-      var effect = s.effects[e];
-
-      if (effect.type !== "DROP_SHADOW" && effect.type !== "INNER_SHADOW")
-        continue;
-
-      var x =
-        effect.offset && typeof effect.offset.x === "number"
-          ? effect.offset.x
-          : 0;
-      var y =
-        effect.offset && typeof effect.offset.y === "number"
-          ? effect.offset.y
-          : 0;
-
-      var blur = effect.radius || 0;
-      var spread = effect.spread || 0;
-
-      var alpha = effect.color && effect.color.a != null ? effect.color.a : 1;
-      var color = rgbaString(effect.color, alpha);
-
-      layers.push({ x: x, y: y, blur: blur, spread: spread, color: color });
-    }
-
-    result[type] = layers;
-  }
-
-  return result;
-}
-
-// -------------------------
 figma.showUI(__html__, { width: 320, height: 200 });
 
 // -------------------------
@@ -213,9 +168,9 @@ async function loadVariables() {
 }
 
 // -------------------------
-// Styles → semantic tokens
+// Styles → semantic tokens (ASYNC shadow)
 // -------------------------
-function loadStyles() {
+async function loadStyles() {
   var textStyles = figma.getLocalTextStyles();
 
   for (var i = 0; i < textStyles.length; i++) {
@@ -316,14 +271,12 @@ function loadStyles() {
       var opacity = paint.opacity != null ? paint.opacity : 1;
       var colorValue = rgbaString(paint.color, opacity);
 
-      // primitives に格納
       if (primitives.color[paintName] == null) {
         primitives.color[paintName] = {
           value: colorValue,
         };
       }
 
-      // semantic では primitives のキー参照
       semantic.color[paintName] = {
         type: "color",
         value: "{primitives.color." + paintName + "}",
@@ -331,9 +284,10 @@ function loadStyles() {
     }
   }
 
+  // -------------------------
+  // Shadow Styles → primitives.shadow (FLAT) / semantic.shadow
+  // -------------------------
   var shadowStyles = figma.getLocalEffectStyles();
-
-  // primitives に個別 shadow として格納
   var shadowPrimitiveCounter = { low: 1, high: 1 };
   primitives.shadow = {};
   semantic.shadow = { low: {}, high: {} };
@@ -376,11 +330,8 @@ function loadStyles() {
       for (var k = 0; k < colorKeys.length; k++) {
         var cKey = colorKeys[k];
         var colorToken = primitives.color[cKey];
-
-        // ★ value 形式に対応
         var colorValue =
           colorToken && colorToken.value ? colorToken.value : null;
-
         if (!colorValue) continue;
 
         var m = colorValue.match(/rgba\((\d+),(\d+),(\d+)/);
@@ -399,26 +350,26 @@ function loadStyles() {
 
       var tokenName = type + "-" + shadowPrimitiveCounter[type]++;
 
-      // primitives に shadow の最終値（alphaを分離）
-      primitives.shadow[tokenName] = {
-        x: { value: x },
-        y: { value: y },
-        blur: { value: blur },
-        spread: { value: spread },
-        color: closestColorKey
-          ? { value: "{primitives.color." + closestColorKey + "}" }
-          : { value: rgbaString(effect.color, 1) },
-        alpha: { value: Math.round(alpha * 1000) / 1000 },
+      primitives.shadow["x-" + tokenName] = { value: x };
+      primitives.shadow["y-" + tokenName] = { value: y };
+      primitives.shadow["blur-" + tokenName] = { value: blur };
+      primitives.shadow["spread-" + tokenName] = { value: spread };
+      primitives.shadow["color-" + tokenName] = {
+        value: closestColorKey
+          ? "{primitives.color." + closestColorKey + "}"
+          : rgbaString(effect.color, 1),
+      };
+      primitives.shadow["alpha-" + tokenName] = {
+        value: Math.round(alpha * 1000) / 1000,
       };
 
-      // semantic では primitives.color を参照しつつ alpha を保持
       semantic.shadow[type][tokenName] = {
-        x: "{primitives.shadow." + tokenName + ".x}",
-        y: "{primitives.shadow." + tokenName + ".y}",
-        blur: "{primitives.shadow." + tokenName + ".blur}",
-        spread: "{primitives.shadow." + tokenName + ".spread}",
-        color: "{primitives.shadow." + tokenName + ".color}",
-        alpha: "{primitives.shadow." + tokenName + ".alpha}",
+        x: "{primitives.shadow.x-" + tokenName + "}",
+        y: "{primitives.shadow.y-" + tokenName + "}",
+        blur: "{primitives.shadow.blur-" + tokenName + "}",
+        spread: "{primitives.shadow.spread-" + tokenName + "}",
+        color: "{primitives.shadow.color-" + tokenName + "}",
+        alpha: "{primitives.shadow.alpha-" + tokenName + "}",
       };
     }
   }
@@ -429,7 +380,7 @@ function loadStyles() {
 // -------------------------
 (async function () {
   await loadVariables();
-  loadStyles();
+  await loadStyles();
 
   var exportJson = { primitives: primitives, semantic: semantic };
 

@@ -1,6 +1,7 @@
 {
   "name": "design-tokens",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "style-dictionary build"
   },

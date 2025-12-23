@@ -1,25 +1,29 @@
-const StyleDictionary = require("style-dictionary");
+import StyleDictionary from "style-dictionary";
 
-module.exports = {
-  // 入力
-  source: ["../tokens/source/tokens.json"],
+/**
+ * Tailwind flat format (v4)
+ */
+StyleDictionary.registerFormat({
+  name: "tailwind/flat",
+  format: ({ dictionary }) => {
+    const result = {};
+    dictionary.allTokens.forEach((token) => {
+      result[token.name] = token.value;
+    });
+    return JSON.stringify(result, null, 2);
+  },
+});
 
-  // 出力
+export default {
+  source: ["tokens/source/tokens.json"],
   platforms: {
     tailwind: {
       transformGroup: "js",
-
-      buildPath: "../tokens/build/",
-
+      buildPath: "tokens/build/",
       files: [
         {
           destination: "tailwind.tokens.json",
-          format: "javascript/module",
-
-          filter: (token) => {
-            // primitives だけを対象にする
-            return token.path[0] === "primitives";
-          },
+          format: "tailwind/flat",
         },
       ],
     },
