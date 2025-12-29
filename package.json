@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npx style-dictionary build --config style-dictionary/style-dictionary.config.js"
+    "build": "npx style-dictionary build --config style-dictionary/style-dictionary.config.js",
+    "build:platform": "node platform-converter/index.js"
   },
   "devDependencies": {
     "style-dictionary": "^4.4.0"
