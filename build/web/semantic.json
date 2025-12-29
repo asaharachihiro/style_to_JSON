@@ -1,0 +1,708 @@
+{
+  "semantic": {
+    "typography": {
+      "display-lg": {
+        "type": "typography",
+        "value": {
+          "fontSize": 56,
+          "fontWeight": 400,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-56}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-140}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "display-lg",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "display-lg"
+        ]
+      },
+      "display-md": {
+        "type": "typography",
+        "value": {
+          "fontSize": 48,
+          "fontWeight": 400,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-48}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-140}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "display-md",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "display-md"
+        ]
+      },
+      "headline-lg": {
+        "type": "typography",
+        "value": {
+          "fontSize": 40,
+          "fontWeight": 400,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-40}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-120}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "headline-lg",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "headline-lg"
+        ]
+      },
+      "headline-md": {
+        "type": "typography",
+        "value": {
+          "fontSize": 32,
+          "fontWeight": 400,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-32}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-120}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "headline-md",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "headline-md"
+        ]
+      },
+      "title-lg": {
+        "type": "typography",
+        "value": {
+          "fontSize": 28,
+          "fontWeight": 400,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-28}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-120}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "title-lg",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "title-lg"
+        ]
+      },
+      "title-md": {
+        "type": "typography",
+        "value": {
+          "fontSize": 24,
+          "fontWeight": 400,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-24}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-140}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "title-md",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "title-md"
+        ]
+      },
+      "title-sm": {
+        "type": "typography",
+        "value": {
+          "fontSize": 20,
+          "fontWeight": 400,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-20}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-140}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "title-sm",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "title-sm"
+        ]
+      },
+      "body-lg": {
+        "type": "typography",
+        "value": {
+          "fontSize": 18,
+          "fontWeight": 400,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-18}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-150}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "body-lg",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "body-lg"
+        ]
+      },
+      "body-md": {
+        "type": "typography",
+        "value": {
+          "fontSize": 16,
+          "fontWeight": 400,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-16}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-150}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "body-md",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "body-md"
+        ]
+      },
+      "body-sm": {
+        "type": "typography",
+        "value": {
+          "fontSize": 14,
+          "fontWeight": 400,
+          "lineHeight": 1.6,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-14}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-160}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "body-sm",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "body-sm"
+        ]
+      },
+      "label-lg": {
+        "type": "typography",
+        "value": {
+          "fontSize": 16,
+          "fontWeight": 400,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-16}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-150}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "label-lg",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "label-lg"
+        ]
+      },
+      "label-md": {
+        "type": "typography",
+        "value": {
+          "fontSize": 14,
+          "fontWeight": 400,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-14}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-140}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "label-md",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "label-md"
+        ]
+      },
+      "label-sm": {
+        "type": "typography",
+        "value": {
+          "fontSize": 12,
+          "fontWeight": 400,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "fontFamily": "Noto Sans JP"
+        },
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "typography",
+          "value": {
+            "fontSize": "{primitives.fontSize.font-size-12}",
+            "fontWeight": "{primitives.fontWeight.font-weight-regular}",
+            "lineHeight": "{primitives.lineHeight.line-height-140}",
+            "letterSpacing": "{primitives.letterSpacing.letter-spacing-0}",
+            "fontFamily": "Noto Sans JP"
+          }
+        },
+        "name": "label-sm",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "typography",
+          "label-sm"
+        ]
+      }
+    },
+    "color": {
+      "primary": {
+        "type": "color",
+        "value": "rgba(7,72,207,1)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.primary}"
+        },
+        "name": "primary",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "primary"
+        ]
+      },
+      "primary-sub": {
+        "type": "color",
+        "value": "rgba(0,83,255,0.1)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.primary-sub}"
+        },
+        "name": "primary-sub",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "primary-sub"
+        ]
+      },
+      "black": {
+        "type": "color",
+        "value": "rgba(1,30,42,1)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.black}"
+        },
+        "name": "black",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "black"
+        ]
+      },
+      "black-sub": {
+        "type": "color",
+        "value": "rgba(1,30,42,0.5)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.black-sub}"
+        },
+        "name": "black-sub",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "black-sub"
+        ]
+      },
+      "black-overlay": {
+        "type": "color",
+        "value": "rgba(1,30,42,0.3)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.black-overlay}"
+        },
+        "name": "black-overlay",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "black-overlay"
+        ]
+      },
+      "black-disabled": {
+        "type": "color",
+        "value": "rgba(1,30,42,0.2)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.black-disabled}"
+        },
+        "name": "black-disabled",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "black-disabled"
+        ]
+      },
+      "black-3-opacity": {
+        "type": "color",
+        "value": "rgba(1,30,42,0.03)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.black-3-opacity}"
+        },
+        "name": "black-3-opacity",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "black-3-opacity"
+        ]
+      },
+      "black-5-opacity": {
+        "type": "color",
+        "value": "rgba(1,30,42,0.05)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.black-5-opacity}"
+        },
+        "name": "black-5-opacity",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "black-5-opacity"
+        ]
+      },
+      "black-10-opacity": {
+        "type": "color",
+        "value": "rgba(1,30,42,0.1)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.black-10-opacity}"
+        },
+        "name": "black-10-opacity",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "black-10-opacity"
+        ]
+      },
+      "black-20-opacity": {
+        "type": "color",
+        "value": "rgba(1,30,42,0.2)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.black-20-opacity}"
+        },
+        "name": "black-20-opacity",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "black-20-opacity"
+        ]
+      },
+      "black-50-opacity": {
+        "type": "color",
+        "value": "rgba(1,30,42,0.5)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.black-50-opacity}"
+        },
+        "name": "black-50-opacity",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "black-50-opacity"
+        ]
+      },
+      "white": {
+        "type": "color",
+        "value": "rgba(255,255,255,1)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.white}"
+        },
+        "name": "white",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "white"
+        ]
+      },
+      "transparent": {
+        "type": "color",
+        "value": "rgba(0,0,0,0)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.transparent}"
+        },
+        "name": "transparent",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "transparent"
+        ]
+      },
+      "danger": {
+        "type": "color",
+        "value": "rgba(224,6,6,1)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.danger}"
+        },
+        "name": "danger",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "danger"
+        ]
+      },
+      "danger-sub": {
+        "type": "color",
+        "value": "rgba(224,6,6,0.1)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.danger-sub}"
+        },
+        "name": "danger-sub",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "danger-sub"
+        ]
+      },
+      "warning": {
+        "type": "color",
+        "value": "rgba(207,165,17,1)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.warning}"
+        },
+        "name": "warning",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "warning"
+        ]
+      },
+      "success": {
+        "type": "color",
+        "value": "rgba(23,179,132,1)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.success}"
+        },
+        "name": "success",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "success"
+        ]
+      },
+      "link": {
+        "type": "color",
+        "value": "rgba(58,58,230,1)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.link}"
+        },
+        "name": "link",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "link"
+        ]
+      },
+      "link-visited": {
+        "type": "color",
+        "value": "rgba(138,74,236,1)",
+        "filePath": "tokens/source/tokens.json",
+        "isSource": true,
+        "original": {
+          "type": "color",
+          "value": "{primitives.color.link-visited}"
+        },
+        "name": "link-visited",
+        "attributes": {},
+        "path": [
+          "semantic",
+          "color",
+          "link-visited"
+        ]
+      }
+    }
+  }
+}
