@@ -4,7 +4,7 @@ export default {
   source: ["tokens/source/tokens.json"],
   platforms: {
     web: {
-      buildPath: "build/web/",
+      buildPath: "tokens/build/",
       files: [
         {
           destination: "primitives.json",
