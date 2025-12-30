@@ -12,8 +12,9 @@ Style Dictionary を使って各プラットフォーム向けに変換・管理
 
 - figma-plugin/ : Figma からトークン JSON をエクスポートするプラグイン
 - tokens/source/ : 元となるデザイントークン（編集対象）
+- style-dictionary/ : 共通デザイントークンへの変換ルール・設定
+- platform-converter/ : 各プラットフォーム用への変換
 - tokens/build/ : 変換後の JSON（直接編集しない）
-- style-dictionary/ : 変換ルール・設定
 
 **---使用方法---**<br>
 
@@ -24,11 +25,20 @@ Style Dictionary を使って各プラットフォーム向けに変換・管理
   4.  manifest.json を指定してプラグインを登録
   5.  プラグインを実行して JSON をダウンロード
 
-- Style Dictionary で各種プラットフォーム向けに変換
+- Style Dictionary で共通デザイントークンを生成
   1.  ダウンロードしたJSONを tokens/source/ に配置
   2.  CLIで変換を実行
       ```
-      npx style-dictionary build --config style-dictionary/style-dictionary.config.js
+      npm run build
+      ```
+  3.  tokens/build/ に変換されたJSONが生成される
+  4.  source、buildのJSONはcommitしてOK
+
+- 各プラットフォーム向けに変換
+  1.  共通デザイントークンを　tokens/source/ に配置
+  2.  CLIで変換を実行
+      ```
+      npm run build:platform
       ```
   3.  tokens/build/ に変換されたJSONが生成される
   4.  source、buildのJSONはcommitしてOK
