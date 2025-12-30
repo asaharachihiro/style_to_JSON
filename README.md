@@ -10,17 +10,19 @@ Style Dictionary を使って各プラットフォーム向けに変換・管理
 
 **---ディレクトリ構成---**
 
+```
 styles_to_JSON/
 ├─ figma_plugin/ ...Figma からトークン JSON をエクスポートするプラグイン
 ├─ style-dictionary/ ...共通デザイントークンへの変換ルール・設定
 ├─ platform-converter/ ...各プラットフォーム用への変換
-├─ tokens/ ...
-│ ├─ source/ ...元となるデザイントークン（編集対象）
+├─ tokens/
+│ ├─ source/ ...共通デザイントークン（編集対象
 │ │ ├─ primitives.json
 │ │ └─ semantic.json
-│ └─ build/ ...変換後の JSON（直接編集しない）
+│ └─ build/ ...変換後の JSON（直接編集しない
 │
 └─package.json
+```
 
 **---使用方法---**<br>
 
@@ -55,3 +57,7 @@ styles_to_JSON/
   - iOS / Android
     - iOS: StyleDictionarySwift でJSONを読み込む
     - Android: StyleDictionaryAndroid でJSONを読み込む
+
+```
+
+```
