@@ -54,7 +54,7 @@ const platforms = [
 // 変換 & 出力
 // -------------------------
 for (const platform of platforms) {
-  const result = platform.convert(primitives, semantic);
+  const result = platform.convert(primitives.primitives, semantic.semantic);
   const outputPath = path.join(TOKENS_DIR, platform.output);
 
   fs.writeFileSync(outputPath, JSON.stringify(result, null, 2));

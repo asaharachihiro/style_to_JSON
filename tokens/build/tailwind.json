@@ -1,0 +1,27 @@
+{
+  "theme": {
+    "fontSize": {},
+    "colors": {
+      "primary": "rgba(7,72,207,1)",
+      "primary-sub": "rgba(0,83,255,0.1)",
+      "black": "rgba(1,30,42,1)",
+      "black-sub": "rgba(1,30,42,0.5)",
+      "black-overlay": "rgba(1,30,42,0.3)",
+      "black-disabled": "rgba(1,30,42,0.2)",
+      "black-3-opacity": "rgba(1,30,42,0.03)",
+      "black-5-opacity": "rgba(1,30,42,0.05)",
+      "black-10-opacity": "rgba(1,30,42,0.1)",
+      "black-20-opacity": "rgba(1,30,42,0.2)",
+      "black-50-opacity": "rgba(1,30,42,0.5)",
+      "white": "rgba(255,255,255,1)",
+      "transparent": "rgba(0,0,0,0)",
+      "danger": "rgba(224,6,6,1)",
+      "danger-sub": "rgba(224,6,6,0.1)",
+      "warning": "rgba(207,165,17,1)",
+      "success": "rgba(23,179,132,1)",
+      "link": "rgba(58,58,230,1)",
+      "link-visited": "rgba(138,74,236,1)"
+    },
+    "boxShadow": {}
+  }
+}
